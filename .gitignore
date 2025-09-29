@@ -102,3 +102,6 @@ Thumbs.db
 
 # Vercel
 .vercel
+
+# Reports directory (contains debugging and analysis reports)
+reports/
