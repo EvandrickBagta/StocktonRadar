@@ -59,7 +59,9 @@ const EventsPage: React.FC = () => {
         await fetchEvents();
         alert(`Scraping completed! Found ${data.summary.totalEventsFound} events, inserted ${data.summary.totalEventsInserted} new events.`);
       } else {
-        setError(data.message || 'Scraping failed');
+        const errorMessage = data.message || data.error || 'Scraping failed';
+        const details = data.details ? `\n\nDetails: ${JSON.stringify(data.details, null, 2)}` : '';
+        setError(`${errorMessage}${details}`);
       }
     } catch (err) {
       setError('Scraping failed');
@@ -111,6 +113,12 @@ const EventsPage: React.FC = () => {
             >
               Reload
             </button>
+            <Link
+              href="/events/test"
+              className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+            >
+              Debug Tests
+            </Link>
           </div>
         </div>
 

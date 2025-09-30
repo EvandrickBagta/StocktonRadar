@@ -43,10 +43,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (error) {
     console.error('❌ API: Error during event scraping:', error);
     
+    // Provide more detailed error information
+    const errorDetails = {
+      message: error instanceof Error ? error.message : 'Unknown error occurred',
+      type: error instanceof Error ? error.constructor.name : 'Unknown',
+      stack: error instanceof Error ? error.stack : undefined
+    };
+    
     return res.status(500).json({
       success: false,
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error occurred',
+      message: errorDetails.message,
+      details: errorDetails,
       timestamp: new Date().toISOString()
     });
   }
