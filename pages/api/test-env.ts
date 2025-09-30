@@ -6,25 +6,54 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
     const envCheck = {
-      supabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-      supabaseAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      supabaseUrl: !!supabaseUrl,
+      supabaseAnonKey: !!supabaseAnonKey,
       nodeEnv: process.env.NODE_ENV,
+      hasEnvFile: true, // We'll assume it exists if we can read env vars
     };
 
     const missingVars = [];
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) missingVars.push('NEXT_PUBLIC_SUPABASE_URL');
-    if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) missingVars.push('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+    const invalidVars = [];
 
-    const success = missingVars.length === 0;
+    if (!supabaseUrl) {
+      missingVars.push('NEXT_PUBLIC_SUPABASE_URL');
+    } else if (supabaseUrl === 'YOUR_SUPABASE_URL' || supabaseUrl === 'your_supabase_project_url_here') {
+      invalidVars.push('NEXT_PUBLIC_SUPABASE_URL (placeholder value)');
+    }
+
+    if (!supabaseAnonKey) {
+      missingVars.push('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+    } else if (supabaseAnonKey === 'YOUR_SUPABASE_ANON_KEY' || supabaseAnonKey === 'your_supabase_anon_key_here') {
+      invalidVars.push('NEXT_PUBLIC_SUPABASE_ANON_KEY (placeholder value)');
+    }
+
+    const success = missingVars.length === 0 && invalidVars.length === 0;
+
+    let message = '';
+    if (success) {
+      message = 'All required environment variables are set and valid';
+    } else if (missingVars.length > 0) {
+      message = `Missing environment variables: ${missingVars.join(', ')}. Please create a .env.local file.`;
+    } else if (invalidVars.length > 0) {
+      message = `Invalid environment variables: ${invalidVars.join(', ')}. Please replace placeholder values with actual Supabase credentials.`;
+    }
 
     return res.status(200).json({
       success,
-      message: success 
-        ? 'All required environment variables are set' 
-        : `Missing environment variables: ${missingVars.join(', ')}`,
+      message,
       environment: envCheck,
-      missing: missingVars
+      missing: missingVars,
+      invalid: invalidVars,
+      setupInstructions: {
+        createEnvFile: missingVars.length > 0,
+        replacePlaceholders: invalidVars.length > 0,
+        envFileContent: `NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url_here
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here`
+      }
     });
 
   } catch (error) {

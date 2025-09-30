@@ -178,12 +178,22 @@ const EventsTestPage: React.FC = () => {
             <div className="bg-gray-50 rounded-lg p-4">
               <h3 className="font-semibold text-gray-900 mb-2">Available Tests:</h3>
               <ul className="text-sm text-gray-700 space-y-1">
-                <li>• <strong>Supabase Connection:</strong> Tests database connectivity</li>
-                <li>• <strong>Scraping API:</strong> Tests the scraping endpoint</li>
-                <li>• <strong>Environment Variables:</strong> Checks configuration</li>
+                <li>• <strong>Environment Variables:</strong> Checks Supabase configuration</li>
                 <li>• <strong>Database Schema:</strong> Validates table structure</li>
+                <li>• <strong>Supabase Connection:</strong> Tests database connectivity</li>
                 <li>• <strong>Individual Scraper:</strong> Tests Visit Stockton scraper</li>
+                <li>• <strong>Scraping API:</strong> Tests the scraping endpoint</li>
               </ul>
+            </div>
+
+            <div className="bg-blue-50 rounded-lg p-4 mt-4">
+              <h3 className="font-semibold text-blue-900 mb-2">⚠️ Setup Required:</h3>
+              <p className="text-sm text-blue-800 mb-2">
+                If you're getting JSON parsing errors, you likely need to set up your environment variables.
+              </p>
+              <div className="text-xs text-blue-700 bg-blue-100 rounded p-2 font-mono">
+                Create a <code>.env.local</code> file in your project root with your Supabase credentials.
+              </div>
             </div>
           </div>
         </div>
@@ -241,32 +251,55 @@ const EventsTestPage: React.FC = () => {
           </div>
         )}
 
-        {/* Debug Information */}
+        {/* Setup Instructions */}
         <div className="max-w-4xl mx-auto mt-12">
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Debug Information</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Setup Instructions</h2>
             
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Common Issues:</h3>
-                <ul className="text-sm text-gray-700 space-y-2">
-                  <li>• <strong>Supabase not configured:</strong> Check environment variables</li>
-                  <li>• <strong>Database schema missing:</strong> Run the SQL schema</li>
-                  <li>• <strong>Scraper timeout:</strong> Website may be blocking requests</li>
-                  <li>• <strong>Network issues:</strong> Check internet connection</li>
-                  <li>• <strong>Rate limiting:</strong> Too many requests to source</li>
-                </ul>
+            <div className="space-y-6">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <h3 className="font-semibold text-yellow-900 mb-2">🚨 Most Common Issue: Missing Environment Variables</h3>
+                <p className="text-sm text-yellow-800 mb-3">
+                  The JSON parsing errors you're seeing are likely because the environment variables aren't set up.
+                </p>
+                <div className="bg-yellow-100 rounded p-3">
+                  <p className="text-sm font-semibold text-yellow-900 mb-2">Quick Fix:</p>
+                  <ol className="text-xs text-yellow-800 space-y-1 ml-4">
+                    <li>1. Create a file called <code>.env.local</code> in your project root</li>
+                    <li>2. Add your Supabase credentials:</li>
+                  </ol>
+                  <div className="bg-yellow-200 rounded p-2 mt-2 font-mono text-xs">
+                    NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url_here<br/>
+                    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+                  </div>
+                  <p className="text-xs text-yellow-800 mt-2">
+                    3. Restart your development server
+                  </p>
+                </div>
               </div>
-              
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Next Steps:</h3>
-                <ul className="text-sm text-gray-700 space-y-2">
-                  <li>• Check Supabase dashboard for errors</li>
-                  <li>• Verify environment variables in .env.local</li>
-                  <li>• Test individual scraper components</li>
-                  <li>• Check browser console for errors</li>
-                  <li>• Review server logs for detailed errors</li>
-                </ul>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Common Issues:</h3>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li>• <strong>Missing .env.local:</strong> Create file with Supabase credentials</li>
+                    <li>• <strong>Database schema missing:</strong> Run the SQL schema in Supabase</li>
+                    <li>• <strong>Scraper timeout:</strong> Website may be blocking requests</li>
+                    <li>• <strong>Network issues:</strong> Check internet connection</li>
+                    <li>• <strong>Rate limiting:</strong> Too many requests to source</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Next Steps:</h3>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li>• Check Supabase dashboard for errors</li>
+                    <li>• Verify environment variables in .env.local</li>
+                    <li>• Test individual scraper components</li>
+                    <li>• Check browser console for errors</li>
+                    <li>• Review server logs for detailed errors</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
